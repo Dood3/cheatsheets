@@ -1,0 +1,74 @@
+==> Getting Help
+Get-Help Select-String
+
+==> Get the MD5 hash of a file
+Get-FileHash -Algorithm MD5 file.txt
+
+==>Find the file "interesting-file.txt" in C:\
+Get-ChildItem -Path C:\ -Include interesting-file.txt -File -Recurse -ErrorAction SilentlyContinue
+
+==> Get the content of the/a file
+Get-Content -Path 'C:\Program Files\interesting-file.txt.txt'
+
+==> How many users have their password required field set to FALSE?
+Get-LocalUser | Where-Object -Property PasswordRequired -Match false
+
+==> Change directories
+Set-Location .\<New-Location>\
+
+==> Get the number of words in a specific file
+Get-Content -Path file.txt | Measure-Object -Word
+
+==> View all hidden files in the current directory (if an error occurs, just continue)
+Get-ChildItem -File/-Directory -Hidden -ErrorAction SilentlyContinue
+
+==> Get the Strings/Numbers at given indexes
+(Get-Content <file.txt>)[index1, index2]
+
+==> Search a file for a string containing given pattern
+Get-Content <file.txt> | Select-String -Pattern 'redryder'
+
+==> Get IP Adress Info
+Get-NetIPAddress
+
+==> Get the Listening addresses
+Get-NetTCPconnection -State Listen
+
+==> How many Patvhes have been applied?
+Get-Hotfix | measure
+
+==> Find the file with the .bak suffix
+Get-ChildItem -Path C:\ -Include *.bak* -File -Recurse -ErrorAction SilentlyContinue
+
+==> Get the content of specific file
+Get-Content "C:\Program Files (x86)\Internet Explorer\passwords.bak.txt"
+
+==> Search for all files containing API_KEY
+Get-ChildItem C:\* -Recurse | Select-String -pattern API_KEY
+
+==> Get the path of the scheduled task with the name 'new-sched-task'
+Get-Scheduledtask -TaskName new-sched-task
+
+==> Get the owner of a specific location (Drive C:\)
+Get-Acl C:\
+
+==> Search for a file containing the string "password" (in a script)
+$path = "C:\Users\Administrator\Desktop\emails\*"
+$string_pattern = "password"
+$command = Get-ChildItem -Path $path -Recurse | Select-String -Pattern $String_pattern
+echo $command
+
+==> Search for files containing an HTTPS link
+$string_pattern = "HTTPS"
+$command = Get-ChildItem -Path $path -Recurse | Select-String -Pattern $String_pattern
+echo $command
+
+==> ??
+$system_ports = Get-NetTCPConnection -State Listen
+$text_port = Get-Content -Path C:\Users\Administrator\Desktop\ports.txt
+foreach($port in $text_port){
+    if($port -in $system_ports.LocalPort){
+        echo $port
+    }
+}
+

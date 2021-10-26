@@ -1,0 +1,108 @@
+====================== FILES ====================== 
+
+find / -perm -u=s -type f 2>/dev/null
+
+=> Find the file in the current directory containing the word "password"
+grep -iRl "password" ./
+
+=> Find all files whose name ends with ".xml"
+find / -type f -name "*.xml" 2>/dev/null
+
+=> Find all files in the /home directory (recursive) whose name is "user.txt" (case insensitive)
+find / -type f -iname "*flag*" 2>/dev/null
+find / -type f -iname user.txt 2>/dev/null
+find / -type f -iname root.txt 2>/dev/null
+
+=> Find all directories whose name contains the word "exploits"
+find / -type f -name "*exploits" 2>/dev/null
+
+=> Find all files owned by the user "kittycat"
+find / -type f -user "kittycat" 2>/dev/null
+
+=> Find all files that are exactly 150 bytes in size
+find / -type f -size 150 2>/dev/null
+
+=> Find all files in the /home directory (recursive) with size less than 2 KiB’s and extension ".txt"
+find /home -type f -size -2k -name "*.txt" 2>/dev/null
+
+=> Find all files that are exactly readable and writeable by the owner, and readable by everyone else (use octal format)
+find / -type f -perm 644 2>/dev/null
+
+=> Find all files that are only readable by anyone (use octal format)
+find / -type f -perm /444 2>/dev/null
+
+=> Find all files with write permission for the group "others", regardless of any other permissions, with extension ".sh" (use symbolic format)
+find / -type f -perm -o=w -name "*.sh" 2>/dev/null
+
+=> Find all files in the /usr/bin directory (recursive) that are owned by root and have at least the SUID permission (use symbolic format)
+find /usr/bin -type f -user root -perm -u=s 2>/dev/null
+
+=> Find all files that were not accessed in the last 10 days with extension ".png"
+find / -type f -time +10 -name "*.png" 2>/dev/null
+
+=> Find all files in the /usr/bin directory (recursive) that have been modified within the last 2 hours
+find /usr/bin -type f -mmin -120 2>/dev/null
+
+=> What is format for finding a file with the user named Francis and with a size of 52 kilobytes in the directory /home/francis/
+find /home/francis -type f -user francis -size 52k 2>/dev/null
+
+=> Find multiple files
+find / -type f \( -name 8V2L -o -name bny0 -o -name c4ZX -o -name D8B3 -o -name FHl1 -o -name oiMO -o -name PFbD -o -name rmfX -o -name SRSq -o -name uqyw -o -name v2Vb -o -name X1Uy \) 2>>/dev/null
+
+=> Which of the files are owned by a specific group
+find / -type f \( -name 8V2L -o -name bny0 -o -name c4ZX -o -name D8B3 -o -name FHl1 -o -name oiMO -o -name PFbD -o -name rmfX -o -name SRSq -o -name uqyw -o -name v2Vb -o -name X1Uy \) -exec ls -ilrt {} \; 2>>/dev/null
+
+=> Which of these files contain an IP address?
+find / -type f \( -name 8V2L -o -name bny0 -o -name c4ZX -o -name D8B3 -o -name FHl1 -o -name oiMO -o -name PFbD -o -name rmfX -o -name SRSq -o -name uqyw -o -name v2Vb -o -name X1Uy \) -exec egrep -o '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' * {} \; 2>>/dev/null
+
+=> Which file contains 230 lines?
+find / -type f \( -name 8V2L -o -name bny0 -o -name c4ZX -o -name D8B3 -o -name FHl1 -o -name oiMO -o -name PFbD -o -name rmfX -o -name SRSq -o -name uqyw -o -name v2Vb -o -name X1Uy \) -exec grep wc -l 230 {} \; 2>>/dev/null
+
+=> Which file's owner has an ID of 502?
+find / -type f \( -name 8V2L -o -name bny0 -o -name c4ZX -o -name D8B3 -o -name FHl1 -o -name oiMO -o -name PFbD -o -name rmfX -o -name SRSq -o -name uqyw -o -name v2Vb -o -name X1Uy \) -exec ls -ln {} \; 2>>/dev/null
+
+=> Find the file named “flag1.txt” in the current directory
+find . -name flag1.txt 2>/dev/null
+
+
+=> Find the file names “flag1.txt” in the /home directory
+find /home -name flag1.txt 2>/dev/null
+
+=> Find the directory named config under “/”
+find / -type d -name config 2>/dev/null
+
+=> Find files with the 777 permissions (files readable, writable, and executable by all users)
+find / -type f -perm 0777 2>/dev/null
+
+=> Find executable files 2>/dev/null
+find / -perm a=x 2>/dev/null
+
+=> Find all files for user “frank” under “/home”
+find /home -user frank 2>/dev/null
+
+=> Find files that were modified in the last 10 days
+find / -mtime 10 2>/dev/null
+
+=> Find files that were accessed in the last 10 day
+find / -atime 10 2>/dev/null
+
+=> Find files changed within the last hour (60 minutes)
+find / -cmin -60 2>/dev/null
+
+=> Find files accesses within the last hour (60 minutes)
+find / -amin -60 2>/dev/null
+
+=> Find files with a 50 MB size
+find / -size 50M 2>/dev/null
+
+====================== DIRECTORIES ====================== 
+
+==> Find folders and files that can be written or executed from (world-writeable folders)
+
+find / -writable -type d 2>/dev/null 
+find / -perm -222 -type d 2>/dev/null
+find / -perm -o w -type d 2>/dev/null: Find world-writeable folders
+
+
+
+
