@@ -64,7 +64,6 @@ find / -type f \( -name 8V2L -o -name bny0 -o -name c4ZX -o -name D8B3 -o -name 
 => Find the file named “flag1.txt” in the current directory
 find . -name flag1.txt 2>/dev/null
 
-
 => Find the file names “flag1.txt” in the /home directory
 find /home -name flag1.txt 2>/dev/null
 
