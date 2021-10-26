@@ -100,7 +100,7 @@ find / -size 50M 2>/dev/null
 
 find / -writable -type d 2>/dev/null 
 find / -perm -222 -type d 2>/dev/null
-find / -perm -o w -type d 2>/dev/null: Find world-writeable folders
+find / -perm -o w -type d 2>/dev/null
 
 
 
