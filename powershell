@@ -4,7 +4,7 @@ Get-Help Select-String
 ==> Get the MD5 hash of a file
 Get-FileHash -Algorithm MD5 file.txt
 
-==>Find the file "interesting-file.txt" in C:\
+==> Find the file "interesting-file.txt" in C:\
 Get-ChildItem -Path C:\ -Include interesting-file.txt -File -Recurse -ErrorAction SilentlyContinue
 
 ==> Get the content of the/a file
@@ -63,7 +63,7 @@ $string_pattern = "HTTPS"
 $command = Get-ChildItem -Path $path -Recurse | Select-String -Pattern $String_pattern
 echo $command
 
-==> ??
+==> Find all litening ports ona Windows machine and export the list to given file
 $system_ports = Get-NetTCPConnection -State Listen
 $text_port = Get-Content -Path C:\Users\Administrator\Desktop\ports.txt
 foreach($port in $text_port){
