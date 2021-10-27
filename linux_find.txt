@@ -8,7 +8,7 @@ grep -iRl "password" ./
 => Find all files whose name ends with ".xml"
 find / -type f -name "*.xml" 2>/dev/null
 
-=> Find all files in the /home directory (recursive) whose name is "user.txt" (case insensitive)
+=> Find all files in the / directory (recursive) with given name (case insensitive)
 find / -type f -iname "*flag*" 2>/dev/null
 find / -type f -iname user.txt 2>/dev/null
 find / -type f -iname root.txt 2>/dev/null
