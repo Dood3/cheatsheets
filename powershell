@@ -34,7 +34,7 @@ Get-NetIPAddress
 ==> Get the Listening addresses
 Get-NetTCPconnection -State Listen
 
-==> How many Patvhes have been applied?
+==> How many Patches have been applied?
 Get-Hotfix | measure
 
 ==> Find the file with the .bak suffix
