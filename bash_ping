@@ -1,1 +1,1 @@
-for i in $(seq 254); do ping 192.168.1.$i -c1 -W1 & done | grep from
+for i in {1..254} ;do (ping -c 1 172.16.20.$i | grep "bytes from" &) ;done
