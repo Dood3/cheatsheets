@@ -1,0 +1,17 @@
+=> Count number of lines in file
+wc -l index.html
+
+=> Cut a string by a delimiter, filter results then sort
+grep "href=" index.html | cut -d "/" -f 3 | grep "\\." | cut -d '"' -f 1 | sort -u
+
+=> Using Grep and regular expressions and output to a file
+cat index.html | grep -o 'http://\[^"\]\*' | cut -d "/" -f 3 | sort –u > list.txt
+
+=> Use a bash loop to find the IP address behind each host (after above command)
+for url in $(cat list.txt); do host $url; done
+
+=> Collect all the IP Addresses from a log file and sort by frequency
+cat access.log | cut -d " " -f 1 | sort | uniq -c | sort -urn
+
+=> Decode HEX string on command line
+echo -n "<HEX-ENCODED-STRING" | xxd -r -ps
