@@ -1,0 +1,20 @@
+WEB SERVERS
+===============================================================================================================================
+
+-> Python2
+$ python -m SimpleHTTPServer 8080
+
+-> Python3
+$ python3 -m http.server 8080
+
+-> Ruby
+$ ruby -run -ehttpd . -p8080
+
+-> PHP
+$ php -S 0.0.0.0:8080
+
+-> SOCAT
+$ socat TCP-LISTEN:8080,reuseaddr,fork
+
+-> IIS (Windows, Administrative access)
+PS C:\directory> Add-WindowsFeature Web-Server, Web-Mgmt-Tools
