@@ -1,0 +1,54 @@
+-> cURL - Basic AUTH Login
+curl http://admin:password@target.com/ -vvv
+OR
+curl -u admin:password  http://target.com/ -vvv
+
+------------------------------------------------------------------------------
+
+-> cURL - Basic AUTH Login & Follow Redirections
+curl -u admin:password -L http://target.com/
+
+------------------------------------------------------------------------------
+
+-> cURL - GET Request With Parameter
+curl -u admin:password 'http://target.com/search.php?port_code=us'
+
+------------------------------------------------------------------------------
+
+-> POST Method (default Content-Type is 'application/x-www-form-urlencoded')
+-> Sends POST request, when '-d' is set
+curl -d 'username=admin&password=password' -L http://target.com/login.php
+
+------------------------------------------------------------------------------
+
+-> cURL - Cookie
+curl -d 'username=admin&password=password' -L --cookie-jar /dev/null  http://target.com/login.php -v
+
+------------------------------------------------------------------------------
+
+-> cURL - Cookie File (saves cookie to file)
+curl -d 'username=admin&password=password' -L --cookie-jar cookies.txt  http://target.com/login.php
+
+-> cURL - Cookie File (use cookie from file)
+curl --cookie cookies.txt http://target.com/admin/dashboard.php -v
+
+------------------------------------------------------------------------------
+
+-> cURL - Content-Type (json)
+curl -H 'Content-Type: application/json' -d '{ "username" : "admin", "password" : "password" }' --cookie-jar /dev/null -L  http://target.com/login.php
+
+------------------------------------------------------------------------------
+
+-> cURL - OPTIONS Request
+curl -X OPTIONS http://target.com/ -vv
+
+------------------------------------------------------------------------------
+
+-> cURL - File Upload
+1. echo "curl file upload!" > test.txt
+2. curl -X PUT -d @test.txt http://target.com/test.txt -vv
+
+------------------------------------------------------------------------------
+
+-> cURL - DELETE Method
+curl -X DELETE http://target.com/test.txt -vv
