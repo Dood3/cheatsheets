@@ -1,0 +1,9 @@
+
+git clone https://github.com/epinna/tplmap.git
+cd tplmap
+pip install virtualenv
+sudo apt-get install python2.7
+virtualenv -p python2.7 venv
+source venv/bin/activate
+pip install -r requirements.txt
+./tplmap.py -u 'http://<TARGET-IP>:<PORT>' -d name=john
