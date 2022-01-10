@@ -14,4 +14,4 @@ for url in $(cat list.txt); do host $url; done
 cat access.log | cut -d " " -f 1 | sort | uniq -c | sort -urn
 
 => Decode HEX string on command line
-echo -n "<HEX-ENCODED-STRING" | xxd -r -ps
+echo -n "<HEX-ENCODED-STRING>" | xxd -r -ps
