@@ -42,7 +42,7 @@ UNION INJECTION
 -> Sort by the second column
 ' order by 2--  
 
--> Find the number of columns [An error indcates there're no more columns]
+-> Find the number of columns [An error indicates there're no more columns]
 ' UNION select 1,2,3--   
 
 -> Get the database verion
