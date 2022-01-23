@@ -1,0 +1,160 @@
+==> Get information about the operating system
+Get-WmiObject -Class win32_OperatingSystem
+(Get-WmiObject -Class Win32_OperatingSystem | select SystemDirectory,BuildNumber,SerialNumber,Version | ft)
+
+==> Rename a file with "Invoke-WmiMethod"
+PS C:\Users> Invoke-WmiMethod -Path "CIM_DataFile.Name='C:\users\public\spns.csv'" -Name Rename -ArgumentList "C:\Users\Public\kerberoasted_users.csv"
+
+==> View all files and directories in the c:\ root directory
+dir c:\ /a
+
+==> Graphically displaying the directory structure of a path
+tree <directory>
+
+==> Walk through results of the 'tree' command page by page
+tree c:\ /f \| more
+
+==> List out NTFS permissions of C:\Windows (icacls = Integrity Control Access Control List)
+icacls c:\windows
+
+  -> Inheritance settings:
+
+  (CI): container inherit
+  (OI): object inherit
+  (IO): inherit only
+  (NP): do not propagate inherit
+  (I): permission inherited from parent container
+
+  -> Basic access permissions:
+
+  F  :  full access
+  D  :  delete access
+  N  :  no access
+  M  :  modify access
+  RX :  read and execute access
+  R  :  read-only access
+  W  :  write-only access
+  
+==> Discretionary Access Control List (DACL) & System Access Control List (SACL)
+-> D: (A;;CCLCSWRPLORC;;;AU)
+
+D: - the proceeding characters are DACL permissions
+AU: - defines the security principal Authenticated Users
+A;; - access is allowed
+CC - SERVICE_QUERY_CONFIG is the full name, and it is a query to the service control manager (SCM) for the service configuration
+LC - SERVICE_QUERY_STATUS is the full name, and it is a query to the service control manager (SCM) for the current status of the service
+SW - SERVICE_ENUMERATE_DEPENDENTS is the full name, and it will enumerate a list of dependent services
+RP - SERVICE_START is the full name, and it will start the service
+LO - SERVICE_INTERROGATE is the full name, and it will query the service for its current status
+RC - READ_CONTROL is the full name, and it will query the security descriptor of the service
+
+==> Grant a user full permissions to a directory
+icacls c:\users /grant john:f
+
+==> Remove a users' permissions on a directory
+icacls c:\users /remove john
+
+==> Give a certain group Full Control over a shared folder
+sudo mount -t cifs -o username=user,password=Password //TARGET-IP/"Company Data" /home/user/Desktop/
+[sudo apt-get install cifs-utils]
+
+==> Load sysinterals into memory from an internet-accessible file share
+C:\User\ \\live.sysinternals.com\tools\procdump.exe -accepteula
+
+==> Query Windows Update Service LOCALLY (cmd)
+sc qc wuauserv
+
+==> Query Windows Update Service REMOTELY (cmd)
+sc //HOSTNAME (or ip of box query ServiceName)
+
+==> Set PATH for a specific service (wuauserv) [ELEVATED]
+C:\WINDOWS\system32> sc config wuauserv binPath=C:\Winbows\Perfectlylegitprogram.exe
+
+==> Get running processes
+PS C:\> Get-Service | ? {$_.Status -eq "Running"} | select -First 2 |fl
+
+==> Examine service permissions
+PS C:\Users\blah> Get-ACL -Path HKLM:\System\CurrentControlSet\Services\wuauserv | Format-List
+
+==> Display the help menu for a specific command
+help <command>
+
+==> List PowerShell aliases
+get-alias
+
+==> Create a new PowerShell alias
+New-Alias -Name "Show-Files" Get-ChildItem
+
+==> View imported PowerShell modules and their associated commands
+Get-Module \| select Name,ExportedCommands \| fl
+
+==> View the PowerShell execution policy
+Get-ExecutionPolicy -List
+
+==> Set the PowerShell execution policy to bypass for the current session
+Set-ExecutionPolicy Bypass -Scope Process
+
+==> Get information about the operating system with wmic
+wmic os list brief
+
+==> Call methods of WMI objects
+Invoke-WmiMethod
+
+==> View the current users' SID
+whoami /user
+
+==> View information about a registry key
+reg query <key>
+
+==> Check which Defender protection settings are enabled
+Get-MpComputerStatus
+
+==> Load Server Configuration menu in Windows Server Core
+sconfig
+
+==> Location of system registry
+C:\Windows\System32\Config\
+
+==> Get user-specific registry hive (HKCU) [C:\Windows\Users\<USERNAME>\Ntuser.dat]
+gci -Hidden
+Get-ChildItem -Hidden
+
+==> Run and RunOnce Registry Keys (useful for maintaining access to the system)
+
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Run
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run
+HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\RunOnce
+HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\RunOnce
+
+==> Get SID of a specific user
+Get-WmiObject -Class Win32_useraccount -filter "name = 'john.doe'"
+
+=============================================================================================
+
+==> SID (whoami /user)
+ws01\bob S-1-5-21-674899381-4069889467-2080702030-1002
+(SID)-(revision level)-(identifier-authority)-(subauthority1)-(subauthority2)-(etc)
+
+NUMBER	    MEANING	                DESCRIPTION
+
+S	          SID	                    Identifies the string as a SID.
+1	          Revision Level	        To date, this has never changed and has always been 1.
+5	          Identifier-authority	  A 48-bit string that identifies the authority 
+                                    (the computer or network) that created the SID.
+21	        Subauthority1	          This is a variable number that identifies the user's relation or group 
+                                    described by the SID to the authority that created it. 
+                                    It tells us in what order this authority created the user's account.
+674899381-
+4069889467-
+2080702030	Subauthority2	          Tells us which computer (or domain) created the number
+1002	      Subauthority3	          The RID that distinguishes one account from another. Tells us whether this user is a normal user,
+                                    a guest, an administrator, or part of some other group
+
+
+
+
+
+
+
+
+
