@@ -1,0 +1,53 @@
+PS C:\Users\blah> systeminfo | findstr Domain
+
+PS C:\Users\blah> Get-ADUser  -Filter *
+
+PS C:\Users\blah> Get-ADUser -Filter * -SearchBase "CN=Users,DC=BLAHREDTEAM,DC=COM"
+PS C:\Users\blah> Get-ADUser -Filter * -SearchBase "OU=blah,DC=BLAHREDTEAM,DC=COM"
+
+--------------------------------------------------------------------------------------
+
+PS C:\Users\blah> wmic /namespace:\\root\securitycenter2 path antivirusproduct
+PS C:\Users\blah> Get-CimInstance -Namespace root/SecurityCenter2 -ClassName AntivirusProduct
+
+PS C:\Users\blah> Get-Service WinDefend
+PS C:\Users\blah> Get-MpComputerStatus | select RealTimeProtectionEnabled
+
+PS C:\Users\blah> Get-NetFirewallProfile | Format-Table Name, Enabled
+PS C:\Windows\system32> Set-NetFirewallProfile -Profile Domain, Public, Private -Enabled False
+
+PS C:\Users\blah> Get-NetFirewallRule | select DisplayName, Enabled, Description
+PS C:\Users\blah> Get-NetFireWallRule | findstr BLAH-Connection
+
+PS C:\Users\blah> Test-NetConnection -ComputerName 127.0.0.1 -Port 8000
+
+--------------------------------------------------------------------------------------
+
+PS C:\Users\blah> Get-EventLog -List
+
+PS C:\Users\blah> Get-Process | Where-Object { $_.ProcessName -eq "Sysmon" }
+PS C:\Users\blah> Get-CimInstance win32_service -Filter "Description = 'System Monitor service'"
+Get-Service | where-object {$_.DisplayName -like "*sysm*"}
+PS C:\Users\blah> reg query HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\WINEVT\Channels\Microsoft-Windows-Sysmon/Operational
+
+PS C:\Users\blah> findstr /si '<ProcessCreate onmatch="exclude">' C:\tools\*
+
+--------------------------------------------------------------------------------------
+
+PS C:\Users\blah> wmic product get name,version
+
+PS C:\Users\blah> Get-ChildItem -Hidden -Path C:\Users\blah2\Desktop\
+
+PS C:\Users\blah> net start
+PS C:\Users\blah> wmic service where "name like 'Blah Service'" get Name,PathName
+PS C:\Users\blah> Get-Process -Name blah-demo
+
+PS C:\Users\blah> netstat -noa | findstr "LISTENING" | findstr "3212" (3212 being the PID)
+
+--------------------------------------------------------------------------------------
+
+PS C:\Users\blah> nslookup.exe
+
+> server 10.10.209.161
+
+> ls -d blahredteam.com (Zone Transfer)
