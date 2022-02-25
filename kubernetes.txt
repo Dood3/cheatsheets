@@ -1,0 +1,67 @@
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+==> Get commands with basic output
+./kubectl get services                          # List all services in the namespace
+./kubectl get pods --all-namespaces             # List all pods in all namespaces
+./kubectl get pods -o wide                      # List all pods in the current namespace, with more details
+./kubectl get deployment my-dep                 # List a particular deployment
+./kubectl get pods                              # List all pods in the namespace
+./kubectl get pod my-pod -o yaml                # Get a pod's YAML
+
+==> Basics
+./kubectl auth can-i --list
+./kubectl get secrets
+./kubectl get secret secretflag -o 'json'
+
+==> Token of the service account running a pod
+/var/run/secrets/kubernetes.io/serviceaccount/token
+
+==> List/show permissions of service account (token)
+./kubectl auth can-i --list --token=${TOKEN}
+
+==> List pods you have access to with specified token
+./kubectl get pods --token=${TOKEN}
+
+==> Get shell in certain pod
+./kubectl exec -it <name_of_pod> --token=${TOKEN} -- /bin/bash
+
+==> Apply a config
+./kubectl apply -f privesc.yml --token=${TOKEN}
+
+==> Describe commands with verbose output
+kubectl describe nodes my-node
+kubectl describe pods my-pod
+
+==> List Services Sorted by Name
+kubectl get services --sort-by=.metadata.name
+
+==> Get the version label of all pods with label app=cassandra
+kubectl get pods --selector=app=cassandra -o jsonpath='{.items[*].metadata.labels.version}'
+
+==> Retrieve the value of a key with dots, e.g. 'ca.crt'
+kubectl get configmap myconfig -o jsonpath='{.data.ca\.crt}'
+
+==> Get all worker nodes (use a selector to exclude results that have a label named 'node-role.kubernetes.io/master')
+kubectl get node --selector='!node-role.kubernetes.io/master'
+
+==> Get all running pods in the namespace
+kubectl get pods --field-selector=status.phase=Running
+
+==> Get ExternalIPs of all nodes
+kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="ExternalIP")].address}'
+
+==> Show labels for all pods (or any other Kubernetes object that supports labelling)
+kubectl get pods --show-labels
+
+==> Output decoded secrets without external tools
+kubectl get secret my-secret -o go-template='{{range $k,$v := .data}}{{"### "}}{{$k}}{{"\n"}}{{$v|base64decode}}{{"\n\n"}}{{end}}'
+
+==> List all Secrets currently in use by a pod
+kubectl get pods -o json | jq '.items[].spec.containers[].env[]?.valueFrom.secretKeyRef.name' | grep -v null | sort | uniq
+
+==> List all containerIDs of initContainer of all pods
+==> Helpful when cleaning up stopped containers, while avoiding removal of initContainers.
+kubectl get pods --all-namespaces -o jsonpath='{range .items[*].status.initContainerStatuses[*]}{.containerID}{"\n"}{end}' | cut -d/ -f3
+
+==> List Events sorted by timestamp
+kubectl get events --sort-by=.metadata.creationTimestamp
