@@ -1,0 +1,22 @@
+==> FTP
+
+-> Return Codes
+https://en.wikipedia.org/wiki/List_of_FTP_server_return_codes
+
+=> vsFTP
+-> Confing file
+/etc/vsftpd.conf (cat /etc/vsftpd.conf | grep -v "#")
+
+--> Download via FTP
+wget -m --no-passive ftp://anonymous:anonymous@TARGET_IP
+
+--> Connect to ftp with SSL
+openssl s_client -connect TARGET_IP:21 -starttls ftp
+
+==> Scanning
+nmap -sV -p21 -sC -A TARGET_IP --script-trace
+
+==> Interact
+openssl s_client -connect TARGET_IP:21 -starttls ftp
+nc -nv TARGET_IP 21
+telnet TARGET_IP 21
