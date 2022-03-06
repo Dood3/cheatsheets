@@ -1,0 +1,10 @@
+==> MYSQL
+
+sudo apt install mysql-server -y
+
+==> Default config
+cat /etc/mysql/mysql.conf.d/mysqld.cnf | grep -v "#" | sed -r '/^\s*$/d'
+
+nmap TARGET_IP -sV -sC -p3306 --script mysql*
+
+mysql -u robin -pP@$$word -h TARGET_IP
