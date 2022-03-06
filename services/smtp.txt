@@ -1,0 +1,11 @@
+==> SMTP
+
+--> Default config
+cat /etc/postfix/main.cf | grep -v "#" | sed -r "/^\s*$/d"
+
+--> Enumeration
+nmap TARGET_IP -sC -sV -p25
+nmap TARGET_IP -p25 --script smtp-open-relay -v
+
+--> Enumeration (Users)
+msf6 auxiliary(scanner/smtp/smtp_enum)
