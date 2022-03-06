@@ -1,0 +1,14 @@
+==> SNMP
+
+--> Default config
+cat /etc/snmp/snmpd.conf | grep -v "#" | sed -r '/^\s*$/d'
+
+--> Tools
+snmpwalk: Query the OIDs with their information
+onesixtyone: Brute-force the names of the community strings
+
+==> Get community string
+onesixtyone -c /opt/useful/SecLists/Discovery/SNMP/snmp.txt v
+
+==> Query OIDs with their information
+snmpwalk -v2c -c public TARGET_I
