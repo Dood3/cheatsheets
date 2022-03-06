@@ -1,0 +1,39 @@
+==> Discovery
+nmap -sS -Pn -F <TARGET_IP>
+
+==> Decoys
+-D DECOY1_IP1,DECOY_IP2,ME
+nmap -sS -Pn -D 10.10.10.1,10.10.10.2,ME -F <TARGET_IP>
+
+==> Random Decoys
+-D RND,RND,ME
+nmap -sS -Pn -D RND,RND,ME -F <TARGET_IP>
+
+==> Proxy
+nmap -sS -Pn --proxies <PROXY_IP> -F <TARGET_IP>
+
+==> Spoof Mac
+--spoof-mac MAC_ADDRESS
+
+==> Spoof IP
+-S IP_ADDRESS
+
+==> Fixed source port number (-g or --source-port)
+nmap -sS -Pn -g 8080 -F <TARGET_IP>
+
+==> Fragmentation (-f = 8bit)
+nmap -sS -Pn -f -F <TARGET_IP>
+nmap -sS -Pn -ff -F <TARGET_IP>
+
+==> Specify length of packet
+nmap -sS -Pn --data-length 64 -F <TARGET_IP>
+--mtu VALUE
+
+==> Set TTL
+nmap -sS -Pn --ttl 81 -F <TARGET_IP>
+
+==> Wrong checksum
+nmap -sS -Pn --badsum -F <TARGET_IP>
+
+==> Port tunneling
+ncat -lvnp 443 -c "ncat TARGET_SERVER 25"
