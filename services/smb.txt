@@ -1,0 +1,39 @@
+==> SMB
+
+--> Enumeration
+nmap TARGET_IP -sV -sC -p139,445
+
+--> Samba config
+cat /etc/samba/smb.conf | grep -v "#\|\;"
+
+--> List content of remote share (anonymous)
+smbclient -N -L //TARGET_IP
+
+--> Connect to share
+smbclient //TARGET_IP/notes
+
+--> Connect to share via rpcclient (anonymous)
+rpcclient -U "" TARGET_IP
+
+srvinfo
+querydominfo
+netshareenumall
+netsharegetinfo <share>
+enumdomusers
+queryuser <RID>
+querygroup <RID>
+
+--> Brute force RIDs
+for i in $(seq 500 1100);do rpcclient -N -U "" TARGET_IP -c "queryuser 0x$(printf '%x\n' $i)" | grep "User Name\|user_rid\|group_rid" && echo "";done
+
+--> Impacket - Samrdump.py
+samrdump.py TARGET_IP
+
+--> SMBmap
+smbmap -H TARGET_IP
+
+--> CrackMapExec
+crackmapexec smb TARGET_IP --shares -u '' -p ''
+
+--> Enum4Linux-ng
+./enum4linux-ng.py TARGET_IP -A
