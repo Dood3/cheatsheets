@@ -1,0 +1,24 @@
+==> NFS
+
+--> Config
+cat /etc/exports
+
+-> Share directory "nfs" with certain options in given subnet
+echo '/mnt/nfs  10.16.93.0/24(sync,no_subtree_check)' >> /etc/exports
+systemctl restart nfs-kernel-server
+exportfs
+
+--> Enumeration
+nmap TARGET_IP -p111,2049 -sV -sC
+nmap --script nfs* TARGET_IP -p111,2049 -sV -sC
+
+--> Show available shares
+showmount -e TARGET_IP
+
+--> Mount discovered share
+(sudo) mkdir target-NFS
+sudo mount -t nfs TARGET_IP:/<remote_nfs> ./target-NFS/ -o nolock
+sudo cd target-NFS
+
+--> Unmount the share
+sudo unmout TARGET_IP:/<remote_nfs>
