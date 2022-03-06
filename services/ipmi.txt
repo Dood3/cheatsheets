@@ -5,10 +5,10 @@ msf6 > use auxiliary/scanner/ipmi/ipmi_version
 
 ==> Default credentials
 
--PRODUCT	      -USERNAME	      -PASSWORD
-Dell iDRAC	      root	          calvin
-HP iLO	          Administrator   randomized 8-character string consisting of numbers and uppercase letters
-Supermicro IPMI	  ADMIN	          ADMIN
+PRODUCT	              USERNAME	      PASSWORD
+Dell iDRAC            root            calvin
+HP iLO	              Administrator   randomized (8-character string consisting of numbers and uppercase letters)
+Supermicro IPMI	      ADMIN           ADMIN
 
 -> If default creds don't work, maybe a flaw in the RAKP protocol will work (transmitted SHA1 or MD5 hash)
 
