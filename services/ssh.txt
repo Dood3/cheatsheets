@@ -1,0 +1,12 @@
+==> SSH
+https://www.golinuxcloud.com/openssh-authentication-methods-sshd-config/
+https://www.ssh.com/academy/ssh/sshd_config
+
+--> Default config
+cat /etc/ssh/sshd_config  | grep -v "#" | sed -r '/^\s*$/d'
+
+git clone https://github.com/jtesta/ssh-audit.git && cd ssh-audit
+./ssh-audit.py TARGET_IP
+
+==> Change authnentication method
+ssh -v blah@TARGET_IP -o PreferredAuthentications=password
