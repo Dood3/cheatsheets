@@ -21,6 +21,8 @@ Generate vulnerable active directories from scratch using a base `ad_config.json
 - Copy this repository onto your installed AD machine.
 - Edit the `ad_config.json` file and set the parameters to suit your domain and needs.  
 ```powershell
+# Copy the folder onto installed AD machine
+# Edit the ad_config.json file and set the parameters
 # Run make_schema.ps1 to generate your AD schema
 ./make_schema.ps1
 # Run gen_vulnAD.ps1 to create the AD
