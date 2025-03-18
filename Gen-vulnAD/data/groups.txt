@@ -1,0 +1,12 @@
+Developer
+Intern
+Student
+Lawyer
+Accounting
+Operations
+Marketing
+Sales
+Executive
+Manager
+Engineer
+Personnel

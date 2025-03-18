@@ -1,0 +1,7 @@
+{
+    "domain": "abc.com",
+    "numGroups":12,
+    "maxUserGroups":2,
+    "numUsers":25,
+    "outputJsonFile":"out.json"
+}

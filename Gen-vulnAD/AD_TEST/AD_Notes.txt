@@ -1,0 +1,34 @@
+https://www.readandexecute.com/how-to/server-2016/active-directory/installing-active-directory-with-powershell-windows-server-2016/
+
+1.) Install the Active Directory Domain Services Feature
+Install-WindowsFeature AD-Domain-Services -IncludeManagementTools
+
+2.) Install an Active Directory Forest
+Install-ADDSForest -DomainName YOURDOMAINHERE -InstallDNS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
