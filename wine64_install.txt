@@ -1,0 +1,25 @@
+sudo wget -NP /etc/apt/sources.list.d/ https://dl.winehq.org/wine-builds/debian/dists/bookworm/winehq-bookworm.sources
+curl -fsSL https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor | sudo tee /etc/apt/keyrings/winehq-archive.key > /dev/null
+
+sudo dpkg --add-architecture i386
+sudo apt update
+sudo apt install --install-recommends winehq-stable
+wine64 --version
+wget https://bootstrap.pypa.io/get-pip.py
+
+WINEARCH=win64 WINEPREFIX=~/.wine64prefix wineboot
+WINEPREFIX=~/.wine64prefix wine64 ~/DEV/python-3.13.3-amd64.exe (install python to C:\Python313 + check the pip box)
+ls ~/.wine64prefix/drive_c/Python313 (Verify)
+WINEPREFIX=~/.wine64prefix wine64 ~/.wine64prefix/drive_c/Python312/python.exe -m pip install scapy pyinstaller
+
+Add to .bashrc:
+alias winpy='WINEPREFIX=~/.wine64prefix wine64 ~/.wine64prefix/drive_c/Python312/python.exe'
+alias winrun='WINEPREFIX=~/.wine64prefix wine64'
+source ~/.bashrc
+
+To run:
+winpy -m pip install scapy pyinstaller
+winpy pyinstaller my_script.py --onefile
+
+winrun C:\\Users\\User-Name\\Desktop\\cool_tool.exe
+winrun icmp_satellite.exe
