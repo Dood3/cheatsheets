@@ -24,9 +24,26 @@ __Install Sub-Domain__
 ```
 Import-Module DNSServer
 
-# Define the subdomain and IP address
+# Define the 1st subdomain and IP address
 $subdomain = "lin.dom.com"
-$ipAddress = "192.168.10.20"
+$ipAddress = "192.168.10.21"
+
+# Create a new primary zone for the subdomain
+Add-DnsServerPrimaryZone -Name $subdomain -ZoneFile "$subdomain.dns"
+
+# Add an A record to the subdomain zone
+Add-DnsServerResourceRecord -ZoneName $subdomain -A -Name "@" -IPv4Address $ipAddress
+
+# Add a TXT record to the subdomain zone
+Add-DnsServerResourceRecord -ZoneName $subdomain -TXT -Name "@" -DescriptiveText "txt_entry_for_lin"
+
+# Verify the configuration
+Get-DnsServerResourceRecord -ZoneName $subdomain -RRType A
+Get-DnsServerResourceRecord -ZoneName $subdomain -RRType TXT
+
+# Define the 2nd subdomain and IP address
+$subdomain = "win.dom.com"
+$ipAddress = "192.168.10.21"
 
 # Create a new primary zone for the subdomain
 Add-DnsServerPrimaryZone -Name $subdomain -ZoneFile "$subdomain.dns"
@@ -36,6 +53,23 @@ Add-DnsServerResourceRecord -ZoneName $subdomain -A -Name "@" -IPv4Address $ipAd
 
 # Add a TXT record to the subdomain zone
 Add-DnsServerResourceRecord -ZoneName $subdomain -TXT -Name "@" -DescriptiveText "txt_entry_for_win"
+
+# Verify the configuration
+Get-DnsServerResourceRecord -ZoneName $subdomain -RRType A
+Get-DnsServerResourceRecord -ZoneName $subdomain -RRType TXT
+
+# Define the 3rd subdomain and IP address
+$subdomain = "ext.dom.com"
+$ipAddress = "192.168.10.21"
+
+# Create a new primary zone for the subdomain
+Add-DnsServerPrimaryZone -Name $subdomain -ZoneFile "$subdomain.dns"
+
+# Add an A record to the subdomain zone
+Add-DnsServerResourceRecord -ZoneName $subdomain -A -Name "@" -IPv4Address $ipAddress
+
+# Add a TXT record to the subdomain zone
+Add-DnsServerResourceRecord -ZoneName $subdomain -TXT -Name "@" -DescriptiveText "txt_entry_for_ext"
 
 # Verify the configuration
 Get-DnsServerResourceRecord -ZoneName $subdomain -RRType A
