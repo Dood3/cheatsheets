@@ -7,6 +7,7 @@
  ╚═════╝ ╚══════╝╚═╝  ╚═══╝        ╚═══╝   ╚═════╝ ╚══════╝╚═╝  ╚═══╝╚═╝  ╚═╝╚═════╝
 ```
 # Gen-VulnAD
+https://github.com/Herkkomehtala/Gen-vulnAD
 
 Generate vulnerable active directories from scratch using a base `ad_config.json` file and a powershell script. inspired by [Wazehell's AD script](https://github.com/WazeHell/vulnerable-AD) and [John Hammond](https://github.com/JohnHammond).  
 
