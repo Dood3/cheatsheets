@@ -30,22 +30,24 @@ __Generate AD-Users__
 ```
 __Install Sub-Domain__
 ```
-Import-Module DNSServer 
+Import-Module DNSServer
 
-# Define the subdomain and IP address 
-$subdomain = "sub.dom.com" $ipAddress = "192.0.2.1" 
+# Define the subdomain and IP address
+$subdomain = "lin.dom.com"
+$ipAddress = "192.168.10.20"
 
-# Create a new primary zone for the subdomain 
-Add-DnsServerPrimaryZone -Name $subdomain -ZoneFile "$subdomain.dns" 
+# Create a new primary zone for the subdomain
+Add-DnsServerPrimaryZone -Name $subdomain -ZoneFile "$subdomain.dns"
 
-# Add an A record to the subdomain zone 
-Add-DnsServerResourceRecord -ZoneName $subdomain -A -Name "@" -IPv4Address $ipAddress 
+# Add an A record to the subdomain zone
+Add-DnsServerResourceRecord -ZoneName $subdomain -A -Name "@" -IPv4Address $ipAddress
 
-# Add a TXT record to the subdomain zone 
-Add-DnsServerResourceRecord -ZoneName $subdomain -TXT -Name "@" -DescriptiveText "txt_entry_for_sub" 
+# Add a TXT record to the subdomain zone
+Add-DnsServerResourceRecord -ZoneName $subdomain -TXT -Name "@" -DescriptiveText "txt_entry_for_win"
 
-# Verify the configuration 
-Get-DnsServerResourceRecord -ZoneName $subdomain -RRType A Get-DnsServerResourceRecord -ZoneName $subdomain -RRType TXT
+# Verify the configuration
+Get-DnsServerResourceRecord -ZoneName $subdomain -RRType A
+Get-DnsServerResourceRecord -ZoneName $subdomain -RRType TXT
 ```
 
 __Install OpenSSH via PowerShell (Windows 10/11)__
